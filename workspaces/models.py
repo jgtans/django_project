@@ -1,7 +1,5 @@
 from django.db import models
 
-from django.db import models
-
 
 class Workspace(models.Model):
     number = models.CharField(max_length=10, verbose_name="Номер")
