@@ -29,4 +29,13 @@ class Employee(models.Model):
         delta = timezone.now().date() - self.hired_at
         return delta.days
 
+    workspace = models.ForeignKey(
+        "workspaces.Workspace",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Рабочее место",
+        related_name="current_employee",
+    )
+
 #TODO добавить сбор метрик WorkSession() "10мин простоя-пауза"
