@@ -1,4 +1,5 @@
 from django.db import models
+from psycopg.types import datetime
 
 
 class Employee(models.Model):
@@ -10,7 +11,7 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=100, verbose_name="Имя")
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name="Пол")
-    hired_at = models.DateField(verbose_name="Дата трудоустройства")
+    hired_at = models.DateField(default=datetime.date.today, verbose_name="Дата трудоустройства")
     description = models.TextField(blank=True, verbose_name="Описание")
 
     def __str__(self):

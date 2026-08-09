@@ -38,9 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "workspaces",
     "employees",
+
     "debug_toolbar",
+    "django_extensions",
+    "pydotplus",
 ]
 
 MIDDLEWARE = [
