@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Employee, EmployeeSkill, Skill
 
@@ -12,10 +13,11 @@ class EmployeeSkillInline(admin.TabularInline):
 
 
 @admin.register(Employee)
-class EmployeeAdmin(admin.ModelAdmin):
+class EmployeeAdmin(ImportExportModelAdmin):
     list_display = (
         "last_name",
         "first_name",
+        "gender",
         "gender",
         "hired_at",
         "tenure_days",
