@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Employee, EmployeeSkill, Skill
+from .models import Employee, EmployeePhoto, EmployeeSkill, Skill
 
 
 class EmployeeSkillInline(admin.TabularInline):
@@ -34,3 +34,10 @@ class EmployeeAdmin(ImportExportModelAdmin):
 class SkillAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
+
+
+class EmployeePhotoInline(admin.TabularInline):
+    model = EmployeePhoto
+    extra = 1
+    fields = ("image", "order")
+    ordering = ("order",)

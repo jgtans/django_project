@@ -105,4 +105,36 @@ class EmployeeSkill(models.Model):
         return f"{self.employee} — {self.skill} ({self.level})"
 
 
+class EmployeePhoto(models.Model):
+    """Фото сотрудника первое в порядке сортировки, является заглавным"""
+
+    employee = models.ForeignKey(
+        Employee,
+        on_delete=models.CASCADE,
+        related_name="photo",
+        verbose_name="Сотрудник",
+    )
+    image = models.ImageField(upload_to="employees/photos/", verbose_name="Фотография")
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+
+    class Meta:
+        verbose_name = "Фото сотрудника"
+        verbose_name_plural = "Фотографии сотрудников"
+        ordering = ["order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["employee", "order"],
+                name="unique_employee_photo_order",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.employee} - фото №{self.order}"
+
+
+@property
+def cover_photo(self):
+    return self.photo.first()
+
+
 # TODO: добавить сбор метрик WorkSession() "10мин простоя-пауза"
