@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -37,6 +38,21 @@ class Employee(models.Model):
         default=datetime.date.today,
         verbose_name="Дата трудоустройства",
     )
+
+    ROLE_CHOICES = [
+        ("backend", "Бэкенд-разработчик"),
+        ("frontend", "Фронтэнд-разработчик"),
+        ("tester", "Тестировщик"),
+        ("other", "Другое"),
+    ]
+
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default="other",
+        verbose_name="Роль",
+    )
+
     description = models.TextField(blank=True, verbose_name="Описание")
     workspace = models.ForeignKey(
         "workspaces.Workspace",
@@ -63,9 +79,48 @@ class Employee(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def clean(self):
+        super().clean()
+
+        # Есть ли кто за столом. Если сотрудника ещё не посадили за стол — проверять нечего
+        if self.workspace is None:
+            return
+
+        # Определяем, кого мы не хотим видеть соседями
+        if self.role == "tester":
+            forbidden = {"backend", "frontend"}
+        elif self.role in {"backend", "frontend"}:
+            forbidden = {"tester"}
+        else:
+            # other сидит где угодно
+            return
+
+        # Смотрим на соседей по столу
+        my_number = self.workspace.number_int
+        if my_number is None:  # непонятный номер стола — пропускаем
+            return
+
+        for neighbor in self.workspace.neighbors():
+            if neighbor.number_int not in (my_number - 1, my_number + 1):
+                continue  # это не сосед, пропускаем
+
+            # Кто сейчас сидит за соседним столом?
+            occupant = (
+                Employee.objects.filter(workspace=neighbor)
+                .exclude(
+                    pk=self.pk
+                )  # на случай, если мы пересаживаем самого сотрудника
+                .first()
+            )
+            if occupant and occupant.role in forbidden:
+                raise ValidationError(
+                    f"Тестировщики и разработчики не могут сидеть за соседними столами: "
+                    f"за столом {neighbor.number} работает {occupant} ({occupant.get_role_display()})."
+                )
+
     @property
     def tenure_days(self):
-        """Стаж в днях — считается автоматически от hired_at."""
+        """Стаж в днях — считается автоматически от hired_at"""
         from django.utils import timezone
 
         delta = timezone.now().date() - self.hired_at
@@ -73,7 +128,7 @@ class Employee(models.Model):
 
 
 class EmployeeSkill(models.Model):
-    """Промежуточная таблица: сотрудник + навык + уровень (1-10)."""
+    """Промежуточная таблица: сотрудник + навык + уровень (1-10)"""
 
     employee = models.ForeignKey(
         Employee,

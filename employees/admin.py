@@ -24,13 +24,14 @@ class EmployeeAdmin(ImportExportModelAdmin):
     list_display = (
         "last_name",
         "first_name",
+        "role",
         "gender",
         "gender",
         "hired_at",
         "tenure_days",
         "workspace",
     )
-    list_filter = ("gender", "workspace")
+    list_filter = ("role", "gender", "workspace")
     search_fields = ("last_name", "first_name")
     list_display_links = ("last_name", "first_name")
     autocomplete_fields = ("workspace",)
@@ -41,5 +42,3 @@ class EmployeeAdmin(ImportExportModelAdmin):
 class SkillAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
-
-
