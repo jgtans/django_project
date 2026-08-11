@@ -4,6 +4,13 @@ from import_export.admin import ImportExportModelAdmin
 from .models import Employee, EmployeePhoto, EmployeeSkill, Skill
 
 
+class EmployeePhotoInline(admin.TabularInline):
+    model = EmployeePhoto
+    extra = 1
+    fields = ("image", "order")
+    ordering = ("order",)
+
+
 class EmployeeSkillInline(admin.TabularInline):
     """Навыки редактируются прямо на странице сотрудника."""
 
@@ -27,7 +34,7 @@ class EmployeeAdmin(ImportExportModelAdmin):
     search_fields = ("last_name", "first_name")
     list_display_links = ("last_name", "first_name")
     autocomplete_fields = ("workspace",)
-    inlines = [EmployeeSkillInline]
+    inlines = [EmployeeSkillInline, EmployeePhotoInline]
 
 
 @admin.register(Skill)
@@ -36,8 +43,3 @@ class SkillAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
-class EmployeePhotoInline(admin.TabularInline):
-    model = EmployeePhoto
-    extra = 1
-    fields = ("image", "order")
-    ordering = ("order",)

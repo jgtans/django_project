@@ -6,5 +6,7 @@ class EmployeesConfig(AppConfig):
     verbose_name = "Сотрудники"
 
 
-def ready(self):
-    import employees.signals
+    def ready(self):
+        import employees.signals
+
+
