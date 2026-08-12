@@ -18,3 +18,5 @@
       Фоновая логика:
    ├─ employees/signals.py → post_delete: файл фото удаляется с диска
    └─ employees/tests.py   → 6 тестов правила соседства
+
+
