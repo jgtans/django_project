@@ -1,5 +1,5 @@
-## Django Project «Seatplan»
-# 🔧 Установка и запуск
+# Django Project «Seatplan»
+## 🔧 Установка и запуск
 
 1. Клонировать репозиторий:
    ```bash
