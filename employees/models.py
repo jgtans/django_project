@@ -3,6 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Skill(models.Model):
@@ -53,7 +54,7 @@ class Employee(models.Model):
         verbose_name="Роль",
     )
 
-    description = models.TextField(blank=True, verbose_name="Описание")
+    description = CKEditor5Field(blank=True, verbose_name="Описание")
     workspace = models.ForeignKey(
         "workspaces.Workspace",
         on_delete=models.SET_NULL,

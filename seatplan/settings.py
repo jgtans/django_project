@@ -50,7 +50,27 @@ INSTALLED_APPS = [
     "django_extensions",
     "pydotplus",
     "import_export",
+    "django_ckeditor_5",
 ]
+
+# Конфигурация тулбара редактора
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
+            "undo",
+            "redo",
+        ],
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
