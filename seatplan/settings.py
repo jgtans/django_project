@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "pydotplus",
     "import_export",
     "django_ckeditor_5",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 # Конфигурация тулбара редактора
@@ -88,7 +89,7 @@ ROOT_URLCONF = "seatplan.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
