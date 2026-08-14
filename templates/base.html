@@ -11,6 +11,14 @@
 		<nav>
 			<a href="{% url 'index' %}">SeatPlan - рассадка в опенспейсе</a>
 			<a href="{% url 'employee_list' %}">Сотрудники</a>
+			{% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit">Выйти ({{ user.username }})</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+            {% endif %}
 		</nav>
 	</header>
 	<main>{% block content %}{% endblock %}</main>

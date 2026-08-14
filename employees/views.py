@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 
 from .models import Employee
@@ -12,6 +13,12 @@ def employee_list(request):
     return render(request, "employees/employee_list.html", {"employees": employees})
 
 
+def employee_detail(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    return render(request, "employees/employee_detail.html", {"employee": employee})
+
+
+@login_required  # неавторизован > редирект на login
 def employee_detail(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     return render(request, "employees/employee_detail.html", {"employee": employee})

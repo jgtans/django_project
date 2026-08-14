@@ -165,3 +165,9 @@ INTERNAL_IPS = [
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Авторизация
+
+LOGIN_URL = "LOGIN"
+LOGIN_REDIRECT_URL = "employee_list"
+LOGOUT_REDIRECT_URL = "index"
