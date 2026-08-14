@@ -1,23 +1,21 @@
 <div class="card">
-	<h3>
-		<a href="{% url 'employee_detail' employee.pk %}">
-			{{employee.list_name}} {{employee.first_name}}
-		</a>
-	</h3>
-	<p>{{employee.get_role_display}}</p>
-	<ul>
-		{% for employee_skill in employeeskill_set.all %}
-			<li>{{ employee_skill.skill.name }} - {{ employee_skill.level }}/10</li>
-		{% empty %}
-			<li>Навыки не указаны</li>
-		{% endfor %}
-	</ul>
+    {% if employee.cover_photo %}
+        <img src="{{ employee.cover_photo.image.url }}" alt="{{ employee.first_name }}" width="200">
+    {% endif %}
+    <h3>
+        <a href="{% url 'employee_detail' employee.pk %}">
+            {{ employee.last_name }} {{ employee.first_name }}
+        </a>
+    </h3>
+    <p>{{ employee.get_role_display }} · стаж {{ employee.tenure_days }} дн.</p>
+    <ul>
+        {% for employee_skill in employee.employeeskill_set.all %}
+            <li>{{ employee_skill.skill.name }} — {{ employee_skill.level }}/10</li>
+        {% empty %}
+            <li>Навыки не указаны</li>
+        {% endfor %}
+    </ul>
 </div>
-
-
-
-
-
 
 
 

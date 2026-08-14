@@ -21,14 +21,16 @@
 
 	<h2> Фотографии </h2>
 	<div class="cards">
-		{% for photo in employee.photos.all %}
-			<div class="card">
-				<img src="{{ photo.image.url }}" alt="Фото: {{ employee.first_name }}">
-				<p> Порядок: {{ photo.order }} </p>
-			</div>
-		{% empty %}
-			<p> Фотографий нет </p>
-		{% endfor %}
+        {% for photo in employee.photos.all %}
+            <div class="card">
+                {% if photo.image %}   <!-- ЗАЧЕМ: запись без файла не уронит страницу -->
+                    <img src="{{ photo.image.url }}" alt="Фото: {{ employee.first_name }}" width="200">
+                {% endif %}
+                <p>Порядок: {{ photo.order }}</p>
+            </div>
+        {% empty %}
+            <p>Фотографий нет</p>
+        {% endfor %}
 	</div>
 
 	<p> <a href="{% url 'employee_list' %}"></a> ← К списку </p>

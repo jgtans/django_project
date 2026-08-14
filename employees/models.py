@@ -167,7 +167,7 @@ class EmployeePhoto(models.Model):
     employee = models.ForeignKey(
         Employee,
         on_delete=models.CASCADE,
-        related_name="photo",
+        related_name="photos",
         verbose_name="Сотрудник",
     )
     image = models.ImageField(upload_to="employees/photos/", verbose_name="Фотография")
@@ -190,7 +190,7 @@ class EmployeePhoto(models.Model):
 
 @property
 def cover_photo(self):
-    return self.photo.first()
+    return self.photo.exclude(image="").first()
 
 
 # TODO: добавить сбор метрик WorkSession() "10мин простоя-пауза"

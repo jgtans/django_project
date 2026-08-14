@@ -7,13 +7,17 @@ from .models import Employee
 
 def index(request):
     # ЗАЧЕМ prefetch_related: навыки всех сотрудников — двумя доп. запросами, а не по одному на карточку
-    employees = Employee.objects.all().prefetch_related("employeeskill_set__skill")
+    employees = Employee.objects.all().prefetch_related(
+        "employeeskill_set__skill", "photos"
+    )
     return render(request, "index.html", {"employees": employees})
 
 
 class EmployeeListView(ListView):
     # ЗАЧЕМ queryset вместо model: model=Employee дал бы all() без prefetch
-    queryset = Employee.objects.all().prefetch_related("employeeskill_set__skill")
+    queryset = Employee.objects.all().prefetch_related(
+        "employeeskill_set__skill", "photos"
+    )
     template_name = "employees/employee_list.html"
     context_object_name = (
         "employees"  # ЗАЧЕМ: дефолт — object_list, а шаблон ждёт employees
