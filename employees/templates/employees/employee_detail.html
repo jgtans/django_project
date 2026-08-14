@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %} {{% exployee.last_name %}} {{% exployee.first_name %}} {% endblock %}
+{% block title %} {{ exployee.last_name }} {{ exployee.first_name }} {% endblock %}
 
 {% block content %}
 
-	<h1>{{% exployee.last_name %}} {{% exployee.first_name %}}</h1>
+	<h1>{{ exployee.last_name }} {{ exployee.first_name }}</h1>
 	<p> Пол: {{ employee.get_gender_display }} · Роль: {{ employee.get_role_display }} </p>
 	<p> Стаж: {{ employee.tenure_days }} дн. </p>
 
