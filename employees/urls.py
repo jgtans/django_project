@@ -10,4 +10,5 @@ urlpatterns = [
         views.EmployeeDetailView.as_view(),
         name="employee_detail",
     ),
+    path("employees/add/", views.EmployeeCreateView.as_view(), name="employee_add"),
 ]

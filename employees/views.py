@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView
 
+from .forms import EmployeeForm
 from .models import Employee
 
 
@@ -46,3 +48,9 @@ class EmployeeDetailView(LoginRequiredMixin, DetailView):
         context["main_photo"] = photos[0] if photos else None
         context["gallery"] = photos[1:]
         return context
+
+
+class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    form_class = EmployeeForm
+    template_name = "employees/employee_form.html"
+    success_url = reverse_lazy("employee_list")

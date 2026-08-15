@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить сотрудника{% endblock %}
+
+{% block content %}
+    <h1>Добавить сотрудника</h1>
+    <form method="post">
+        {% csrf_token %}  <!-- ЗАЧЕМ: без токена Django отклонит POST (403) -->
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+{% endblock %}
