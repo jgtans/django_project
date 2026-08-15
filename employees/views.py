@@ -6,26 +6,29 @@ from .models import Employee
 
 
 def index(request):
-    # ЗАЧЕМ prefetch_related: навыки всех сотрудников — двумя доп. запросами, а не по одному на карточку
-    employees = Employee.objects.all().prefetch_related(
+    # count() - бд считает строки сама, объекты не создаются
+    total_count = Employee.objects.count()
+    # перед полем: сортировка по убыванию даты
+    # срез [:4] в SQL превращается в LIMIT 4
+    employees = Employee.objects.order_by("-hired_at")[:4].prefetch_related(
         "employeeskill_set__skill", "photos"
     )
-    return render(request, "index.html", {"employees": employees})
+    return render(
+        request, "index.html", {"employees": employees, "total_count": total_count}
+    )
 
 
 class EmployeeListView(ListView):
-    # ЗАЧЕМ queryset вместо model: model=Employee дал бы all() без prefetch
+    # queryset вместо model: model=Employee дал бы all() без prefetch
     queryset = Employee.objects.all().prefetch_related(
         "employeeskill_set__skill", "photos"
     )
     template_name = "employees/employee_list.html"
-    context_object_name = (
-        "employees"  # ЗАЧЕМ: дефолт — object_list, а шаблон ждёт employees
-    )
+    context_object_name = "employees"  # дефолт — object_list, а шаблон ждёт employees
 
 
 class EmployeeDetailView(LoginRequiredMixin, DetailView):
-    # ЗАЧЕМ LoginRequiredMixin: классный аналог @login_required (K8 сохраняется)
+    # LoginRequiredMixin: классный аналог @login_required (K8 сохраняется)
     model = Employee
     template_name = "employees/employee_detail.html"
     context_object_name = "employee"

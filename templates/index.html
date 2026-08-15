@@ -8,4 +8,13 @@
 		навыки с уровнями, рабочие места, фотографии.
 		Тестировщики и разработчики не сидят за соседними столами.
 	</p>
+	    <p>Всего сотрудников в базе: {{ total_count }}</p>
+    <h2>Последние нанятые</h2>
+    <div class="cards">
+        {% for employee in employees %}
+            {% include "employees/employee_card.html" %}
+        {% empty %}
+            <p>Сотрудников пока нет.</p>
+        {% endfor %}
+    </div>
 {% endblock %}
