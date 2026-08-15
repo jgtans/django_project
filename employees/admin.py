@@ -26,7 +26,6 @@ class EmployeeAdmin(ImportExportModelAdmin):
         "first_name",
         "role",
         "gender",
-        "gender",
         "hired_at",
         "tenure_days",
         "workspace",

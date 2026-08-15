@@ -11,7 +11,9 @@
 		<nav>
 			<a href="{% url 'index' %}">SeatPlan - рассадка в опенспейсе</a>
 			<a href="{% url 'employee_list' %}">Сотрудники</a>
-			<a href="{% url 'employee_add' %}">Добавляем</a>
+			{% if user.is_authenticated %}
+                <a href="{% url 'employee_add' %}">Добавить сотрудника</a>
+			{% endif %}
 			{% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}" class="logout-form">
                     {% csrf_token %}

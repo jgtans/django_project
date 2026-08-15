@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     "pydotplus",
     "import_export",
     "django_ckeditor_5",
-    "django_cleanup.apps.CleanupConfig",
 ]
 
 # Конфигурация тулбара редактора
@@ -146,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Yekaterinburg"
 
 USE_I18N = True
 

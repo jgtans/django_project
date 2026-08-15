@@ -5,7 +5,7 @@
 {% block content %}
 
 	<h1>Сотрудники</h1>
-	<div class="card">
+	<div class="cards">
 		{% for employee in employees %}
 			{% include 'employees/employee_card.html' %}
 		{% empty %}
