@@ -25,6 +25,7 @@ class EmployeeListView(ListView):
     )
     template_name = "employees/employee_list.html"
     context_object_name = "employees"  # дефолт — object_list, а шаблон ждёт employees
+    paginate_by = 10  # окно из 10 карточек, в SQL - LIMIT 10 OFFSET
 
 
 class EmployeeDetailView(LoginRequiredMixin, DetailView):
@@ -33,3 +34,15 @@ class EmployeeDetailView(LoginRequiredMixin, DetailView):
     template_name = "employees/employee_detail.html"
     context_object_name = "employee"
     # DetailView сама делает get_object_or_404 «под капотом» — 404 при /employees/999/ остаётся
+    queryset = Employee.objects.select_related("workspace").prefetch_related(
+        "employeeskill_set__skill", "photos"
+    )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # ЗАЧЕМ .all() + list comprehension: берём фото ИЗ КЭША prefetch (0 доп. запросов)
+        # и в Python отсеиваем призраков без файла
+        photos = [p for p in self.object.photos.all() if p.image]
+        context["main_photo"] = photos[0] if photos else None
+        context["gallery"] = photos[1:]
+        return context

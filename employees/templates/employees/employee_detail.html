@@ -4,9 +4,14 @@
 
 {% block content %}
 
+	{% if main_photo %}
+        <img src="{{ main_photo.image.url }}" alt="Главное фото: {{ employee.first_name }}" width="300">
+    {% endif %}
+
 	<h1>{{ exployee.last_name }} {{ exployee.first_name }}</h1>
 	<p> Пол: {{ employee.get_gender_display }} · Роль: {{ employee.get_role_display }} </p>
 	<p> Стаж: {{ employee.tenure_days }} дн. </p>
+	<p> Стол: {{ employee.workspace.number|default:"не назначен" }}</p>
 
 	<h2> Описание </h2>
 	<div> {{ employee.discription|safe }} </div>
@@ -17,21 +22,26 @@
 		{% empty %}
 			<li> Навыки не указаны </li>
 		{% endfor %}
-	</ul>>
+	</ul>
 
-	<h2> Фотографии </h2>
-	<div class="cards">
-        {% for photo in employee.photos.all %}
+	    <h2>Главное фото</h2>
+    {% if main_photo %}
+        <img src="{{ main_photo.image.url }}" alt="Главное фото: {{ employee.first_name }}" width="300">
+    {% else %}
+        <p>Главного фото нет</p>
+    {% endif %}
+
+    <h2>Галерея</h2>
+    <div class="cards">
+        {% for photo in gallery %}
             <div class="card">
-                {% if photo.image %}   <!-- ЗАЧЕМ: запись без файла не уронит страницу -->
-                    <img src="{{ photo.image.url }}" alt="Фото: {{ employee.first_name }}" width="200">
-                {% endif %}
+                <img src="{{ photo.image.url }}" alt="Фото: {{ employee.first_name }}" width="200">
                 <p>Порядок: {{ photo.order }}</p>
             </div>
         {% empty %}
-            <p>Фотографий нет</p>
+            <p>Других фото нет</p>
         {% endfor %}
-	</div>
+    </div>
 
 	<p> <a href="{% url 'employee_list' %}"></a> ← К списку </p>
 {% endblock %}
