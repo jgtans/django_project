@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils import timezone
 
 from workspaces.models import Workspace
 
@@ -126,7 +127,7 @@ class TenureTests(TestCase):
             first_name="Анна",
             last_name="Смирнова",
             gender="F",
-            hired_at=datetime.date.today() - datetime.timedelta(days=10),
+            hired_at=timezone.localdate() - datetime.timedelta(days=10),
         )
         self.assertEqual(emp.tenure_days, 10)
 
@@ -135,7 +136,7 @@ class TenureTests(TestCase):
             first_name="Новичок",
             last_name="Нулевой",
             gender="M",
-            hired_at=datetime.date.today(),
+            hired_at=timezone.localdate(),
         )
         self.assertEqual(emp.tenure_days, 0)
 

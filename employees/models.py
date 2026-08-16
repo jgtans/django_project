@@ -3,6 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 
 
@@ -122,10 +123,7 @@ class Employee(models.Model):
     @property
     def tenure_days(self):
         """Стаж в днях — считается автоматически от hired_at"""
-        from django.utils import timezone
-
-        delta = timezone.now().date() - self.hired_at
-        return delta.days
+        return (timezone.localdate() - self.hired_at).days
 
 
 class EmployeeSkill(models.Model):
