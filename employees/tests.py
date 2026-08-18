@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -75,7 +76,7 @@ class NeighborValidationTests(TestCase):
             role="frontend",
             workspace=self.desk_102,
         )
-        dev.full_clean()  # не должен бросать исключение
+        dev.full_clean()
 
     def test_other_role_neighbour_of_tester_allowed(self):
         Employee.objects.create(
@@ -101,7 +102,6 @@ class NeighborValidationTests(TestCase):
         newbie.full_clean()
 
     def test_tester_two_desks_away_allowed(self):
-        # граница соседства: 103 НЕ сосед для 101 (между ними 102)
         Employee.objects.create(
             first_name="Иван",
             last_name="Бэкендов",
@@ -116,7 +116,7 @@ class NeighborValidationTests(TestCase):
             role="tester",
             workspace=self.desk_103,
         )
-        tester.full_clean()  # не должен бросать исключение
+        tester.full_clean()
 
 
 class TenureTests(TestCase):
@@ -163,3 +163,75 @@ class ClientSmokeTests(TestCase):
     def test_list_page_shows_employee_last_name(self):
         response = self.client.get("/employees/")
         self.assertContains(response, "Иванов")
+
+
+class MainContextTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.desk = Workspace.objects.create(
+            number="A-101",
+            floor=1,
+            workspace_type="офисное",
+        )
+        cls.employee = Employee.objects.create(
+            first_name="Иван",
+            last_name="Иванов",
+            gender="M",
+            workspace=cls.desk,
+        )
+
+    def test_main_uses_base_and_index_templates(self):
+        response = self.client.get("/")
+        self.assertTemplateUsed(response, "base.html")
+        self.assertTemplateUsed(response, "index.html")
+
+    def test_main_context_has_total_count(self):
+        response = self.client.get("/")
+        self.assertEqual(response.context["total_count"], 1)
+
+    def test_main_context_has_recent_employees(self):
+        response = self.client.get("/")
+        self.assertQuerySetEqual(response.context["employees"], [self.employee])
+
+    def test_list_uses_employee_list_template(self):
+        response = self.client.get("/employees/")
+        self.assertTemplateUsed(response, "employees/employee_list.html")
+
+    def test_list_not_paginated_with_one_employee(self):
+        response = self.client.get("/employees/")
+        self.assertFalse(response.context["is_paginated"])
+
+    def test_list_paginated_when_eleven_employees(self):
+        for i in range(10):
+            Employee.objects.create(
+                first_name=f"Тест{i}",
+                last_name=f"Много{i}",
+                gender="M",
+            )
+        response = self.client.get("/employees/")
+        self.assertTrue(response.context["is_paginated"])
+
+
+class DetailAccessTests(TestCase):
+    """ДЗ 5, K3–K4: права доступа к детальной странице."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.desk = Workspace.objects.create(
+            number="A-101", floor=1, workspace_type="офисное"
+        )
+        cls.employee = Employee.objects.create(
+            first_name="Иван", last_name="Иванов", gender="M", workspace=cls.desk
+        )
+        cls.user = User.objects.create_user(username="boss", password="pass12345")
+
+    def test_anonymous_redirected_to_login(self):
+        response = self.client.get(f"/employees/{self.employee.pk}/")
+        self.assertRedirects(response, f"/login/?next=/employees/{self.employee.pk}/")
+
+    def test_authenticated_gets_200_and_context(self):
+        self.client.force_login(self.user)
+        response = self.client.get(f"/employees/{self.employee.pk}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "employees/employee_detail.html")
+        self.assertEqual(response.context["employee"], self.employee)

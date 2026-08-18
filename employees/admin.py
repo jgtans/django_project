@@ -16,7 +16,7 @@ class EmployeeSkillInline(admin.TabularInline):
 
     model = EmployeeSkill
     extra = 1
-    autocomplete_fields = ("skill",)  # удобный автодополнитель
+    autocomplete_fields = ("skill",)
 
 
 @admin.register(Employee)

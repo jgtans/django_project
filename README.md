@@ -37,3 +37,12 @@
 ---
    
 6. Открыть в браузере: http://127.0.0.1:8080
+
+
+---
+## Порядок запуска (Docker)
+1. `docker compose up -d --build` — поднимает PostgreSQL и Django, миграции выполняются автоматически.
+2. `docker compose exec web python manage.py createsuperuser` — создать администратора.
+3. Адреса: сайт http://localhost:8000, API http://localhost:8000/api/v1/employees/, Swagger http://localhost:8000/swagger/.
+4. Роли: в админке назначь пользователю группу `watchers` (смотритель) или `admins` (администратор).
+5. Остановка: `docker compose down` (данные БД сохраняются в томе pgdata).

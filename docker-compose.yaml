@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: seatplan_db
+      POSTGRES_USER: seatplan_user
+      POSTGRES_PASSWORD: seatplan_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: seatplan_db
+      POSTGRES_USER: seatplan_user
+      POSTGRES_PASSWORD: seatplan_pass
+      DJANGO_SECRET_KEY: dev-secret-key
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - media_data:/app/media
+
+volumes:
+  pgdata:
+  media_data:
